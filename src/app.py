@@ -30,11 +30,7 @@ def handle_hello():
     members = jackson_family.get_all_members()
     return jsonify(members), 200
 
-@app.route('/member', methods=['POST'])
-def add_new_member():
-    response = request.get_json()
-    new_member = response
-    return jsonify(jackson_family.add_member(new_member)), 201
+@app.route('/member', methods=['POST']) def add_new_member(): response = request.get_json() new_member = response return jsonify(jackson_family.add_member(new_member)), 200
 
 @app.route('/member/<int:member_id>', methods=['GET'])
 def get_a_member(member_id):
@@ -47,10 +43,10 @@ def get_a_member(member_id):
     
 @app.route('/member/<int:member_id>', methods=['DELETE'])
 def delete_member(member_id):
-    get_rid_of_member = jackson_family.delete_member(member_id)
-    if get_rid_of_member is not None:
-        return jsonify(get_rid_of_member), 200
-    return jsonify({'msg': 'Member does not exist or cannot be deleted'}), 400
+    result = jackson_family.delete_member(member_id)
+    if result["done"]:
+        return jsonify(result), 200
+    return jsonify(result), 404
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
